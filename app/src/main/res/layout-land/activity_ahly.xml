@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/question_text_view"
+        android:textSize="25sp"
+        android:padding="24dp"
+        android:textColor="@color/colorPrimary"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/first_choice_text_view"
+           android:fontFamily="sans-serif"
+            android:textStyle="bold|italic"
+            android:textColor="#EC2028"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textStyle="bold|italic"
+            android:fontFamily="sans-serif"
+            android:textColor="#EC2028"
+            android:textSize="20sp"
+            android:id="@+id/second_choice_text_view"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/third_choice_text_view"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_margin="10dp"
+            android:fontFamily="sans-serif"
+            android:textColor="#EC2028"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <ImageButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/prev_button"
+    android:contentDescription="@string/prev_button"
+    android:src="@drawable/arrow_left"
+    />
+    <ImageButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/next_button"
+    android:contentDescription="@string/next_button"
+    android:src="@drawable/arrow_right"
+    />
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
