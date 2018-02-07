@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +21,7 @@ public class AhlyActivity extends AppCompatActivity {
     private  TextView mFirstChoiceTextView;
     private  TextView mSecondChoiceTextView;
     private  TextView mThirdChoiceTextView;
- //   private Button mCheatButton;
+    private Button mCheatButton;
     private ArrayList<Integer> mQuestionAsked = new ArrayList<Integer>(10);
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
@@ -108,16 +109,17 @@ public class AhlyActivity extends AppCompatActivity {
         });
     //    mBank[Current].mAns() = 1 ;
 
-//        mCheatButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 //                int trueAnswer = mQuestionsBank[mCurrentIndex].getAnswerTrue();
 //                Intent intent=new Intent(AhlyActivity.this,CheatActivity.class);
 //                intent.putExtra("zip",trueAnswer);
 //                startActivityForResult(intent,0);
-//            }
-//        });
-
+                Intent intent=new Intent(AhlyActivity.this,ChooseLevelActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 //
 //    @Override
@@ -137,7 +139,7 @@ public class AhlyActivity extends AppCompatActivity {
         mThirdChoiceTextView=  findViewById(R.id.third_choice_text_view);
         mNextButton=  findViewById(R.id.next_button);
         mPrevButton=  findViewById(R.id.prev_button);
-      //  mCheatButton=findViewById(R.id.cheat_button);
+        mCheatButton=findViewById(R.id.cheat_button);
         mQuestionTimerTextView=findViewById(R.id.question_timer_text_view);
     }
 
