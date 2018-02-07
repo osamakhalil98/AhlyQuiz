@@ -27,10 +27,13 @@ public class AhlyActivity extends AppCompatActivity {
     private ImageButton mPrevButton;
     private int mTrueAnswer=0;
     private TextView mQuestionTimerTextView;
+    private static final int REQUEST_CODE_CHEAT = 0;
     private  int timer = 15000;
     private int mResponse=0;
     private Toast toast;
     private boolean isInForeGround;
+    private int mIsCheater;
+    private int cheatCounter=0;
     private CountDownTimer mCountDownTimer;
     private Question[] mQuestionsBank= new Question[]{
             new Question(R.string.question_1, R.string.question_1_choice_1, R.string.question_1_choice_2, R.string.question_1_choice_3, R.string.question_1_choice_2),
@@ -107,21 +110,36 @@ public class AhlyActivity extends AppCompatActivity {
               Next();
             }
         });
-    //    mBank[Current].mAns() = 1 ;
 
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                int trueAnswer = mQuestionsBank[mCurrentIndex].getAnswerTrue();
-//                Intent intent=new Intent(AhlyActivity.this,CheatActivity.class);
-//                intent.putExtra("zip",trueAnswer);
-//                startActivityForResult(intent,0);
-                Intent intent=new Intent(AhlyActivity.this,ChooseLevelActivity.class);
-                startActivity(intent);
+                int trueAnswer = mQuestionsBank[mCurrentIndex].getAnswerTrue();
+                Intent intent = CheatActivity.newIntent(AhlyActivity.this, trueAnswer);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+               if(mQuestionsBank[mCurrentIndex].getmAnswered()==0){
+                   cheatCounter++;
+               }
+               if(cheatCounter>=2){
+                   mCheatButton.setEnabled(false);
+               }
             }
         });
     }
-//
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode!=RESULT_OK){
+            return;
+        }
+        if(requestCode==REQUEST_CODE_CHEAT){
+            if(data==null){
+                return;
+            }
+            mIsCheater=CheatActivity.wasAnswerShown(data);
+        }
+    }
+    //
 //    @Override
 //    protected void onSaveInstanceState(Bundle outState)
 //    {
@@ -133,12 +151,12 @@ public class AhlyActivity extends AppCompatActivity {
 
 
     private void castUtils() {
-        mQuestionTextView=  findViewById(R.id.question_text_view);
-        mFirstChoiceTextView=  findViewById(R.id.first_choice_text_view);
-        mSecondChoiceTextView=  findViewById(R.id.second_choice_text_view);
-        mThirdChoiceTextView=  findViewById(R.id.third_choice_text_view);
-        mNextButton=  findViewById(R.id.next_button);
-        mPrevButton=  findViewById(R.id.prev_button);
+        mQuestionTextView=findViewById(R.id.question_text_view);
+        mFirstChoiceTextView=findViewById(R.id.first_choice_text_view);
+        mSecondChoiceTextView=findViewById(R.id.second_choice_text_view);
+        mThirdChoiceTextView=findViewById(R.id.third_choice_text_view);
+        mNextButton=findViewById(R.id.next_button);
+        mPrevButton=findViewById(R.id.prev_button);
         mCheatButton=findViewById(R.id.cheat_button);
         mQuestionTimerTextView=findViewById(R.id.question_timer_text_view);
     }

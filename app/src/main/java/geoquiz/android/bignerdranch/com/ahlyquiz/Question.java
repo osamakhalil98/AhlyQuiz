@@ -12,6 +12,7 @@ public class Question {
     private int mChoice2;
     private int mChoice3;
     private  int mAnswered;
+    private int mCheated;
 
     public int getmAnswered() {
         return mAnswered;
@@ -29,7 +30,15 @@ public class Question {
         this.mChoice2=mChoice2;
         this.mChoice3=mChoice3;
         mAnswered=0;
+        mCheated=0;
+    }
 
+    public int getCheated() {
+        return mCheated;
+    }
+
+    public void setCheated(int cheated) {
+        mCheated = cheated;
     }
 
     public int getChoice1() {
