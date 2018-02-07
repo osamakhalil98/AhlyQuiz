@@ -3,6 +3,7 @@ package geoquiz.android.bignerdranch.com.ahlyquiz;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -161,8 +162,11 @@ public class TrueFanActivity extends AppCompatActivity {
         int answerIsTrue = mQuestionsBank[mCurrentIndex].getAnswerTrue();
 
         if(choice == answerIsTrue){
+            correctAnswerSound();
             mResponse++;
             mTrueAnswer++;
+            final MediaPlayer correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
+            correctAnswer.start();
             Toast toast = new Toast(TrueFanActivity.this);
             toast.setDuration(Toast.LENGTH_LONG);
 
@@ -176,6 +180,7 @@ public class TrueFanActivity extends AppCompatActivity {
         }
 
         else if(choice!=answerIsTrue){
+            wrongAnswerSound();
             mResponse++;
             Toast toast = new Toast(TrueFanActivity.this);
             toast.setDuration(Toast.LENGTH_LONG);
@@ -192,6 +197,16 @@ public class TrueFanActivity extends AppCompatActivity {
         }
         mQuestionsBank[mCurrentIndex].setmAnswered(1);
         setButtons();
+    }
+    private void correctAnswerSound(){
+        final MediaPlayer correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
+        correctAnswer.start();
+    }
+    private void wrongAnswerSound(){
+        final MediaPlayer wrongAnswer=MediaPlayer.create(this,R.raw.wrong_answer_sound);
+        if(isInForeGround) {
+            wrongAnswer.start();
+        }
     }
     @Override
     protected void onResume() {
@@ -293,6 +308,7 @@ public class TrueFanActivity extends AppCompatActivity {
                     setButtons();
                     if(mResponse<10){
                         mQuestionAsked.add(mCurrentIndex);
+                        wrongAnswerSound();
                         Toast toast = new Toast(TrueFanActivity.this);
                         toast.setDuration(Toast.LENGTH_LONG);
                         LayoutInflater inflater = (LayoutInflater)TrueFanActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
