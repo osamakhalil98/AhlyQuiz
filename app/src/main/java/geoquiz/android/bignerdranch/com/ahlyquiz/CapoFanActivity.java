@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,13 +21,18 @@ public class CapoFanActivity extends AppCompatActivity {
     private  TextView mFirstChoiceTextView;
     private  TextView mSecondChoiceTextView;
     private  TextView mThirdChoiceTextView;
-   // private Button mCheatButton;
+    private Button mCheatButton;
+    private static final int REQUEST_CODE_CHEAT=0;
+    private int cheatCounter;
     private static final String KEY_INDEX="index";
     private ArrayList<Integer> mQuestionAsked = new ArrayList<Integer>(9);
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
+    QuestionLab mScore=new QuestionLab();
     private int mTrueAnswer=0;
     private TextView mQuestionTimerTextView;
+    MediaPlayer correctAnswer;
+    MediaPlayer wrongAnswer;
     private boolean isInForeGround;
     private  int timer = 10000;
     private int mResponse=0;
@@ -72,6 +78,7 @@ public class CapoFanActivity extends AppCompatActivity {
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mCountDownTimer.cancel();
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
                 updateMethod();
             }
@@ -105,14 +112,20 @@ public class CapoFanActivity extends AppCompatActivity {
         });
         //    mBank[Current].mAns() = 1 ;
 
-//        mCheatButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int trueAnswer = mQuestionsBank[mCurrentIndex].getAnswerTrue();
-//                Intent intent = CheatActivity.newIntent(CapoFanActivity.this, trueAnswer);
-//                startActivity(intent);
-//            }
-//        });
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int trueAnswer = mQuestionsBank[mCurrentIndex].getAnswerTrue();
+                Intent intent = CheatActivity.newIntent(CapoFanActivity.this, trueAnswer);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+                if(mQuestionsBank[mCurrentIndex].getmAnswered()==0){
+                    cheatCounter++;
+                }
+                if(cheatCounter>=3 || mQuestionsBank[mCurrentIndex].getmAnswered() == 1){
+                    mCheatButton.setEnabled(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -131,7 +144,7 @@ public class CapoFanActivity extends AppCompatActivity {
         mThirdChoiceTextView=  findViewById(R.id.third_choice_text_view);
         mNextButton=  findViewById(R.id.next_button);
         mPrevButton=  findViewById(R.id.prev_button);
-       // mCheatButton=findViewById(R.id.cheat_button);
+        mCheatButton=findViewById(R.id.cheat_button);
         mQuestionTimerTextView=findViewById(R.id.question_timer_text_view);
     }
 
@@ -190,14 +203,28 @@ public class CapoFanActivity extends AppCompatActivity {
         setButtons();
     }
     private void correctAnswerSound(){
-        final MediaPlayer correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
-        correctAnswer.start();
+        correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
+        try {
+            if (correctAnswer.isPlaying()) {
+                correctAnswer.stop();
+                correctAnswer.release();
+                correctAnswer = MediaPlayer.create(this, R.raw.correct_answer_sound);
+            } correctAnswer.start();
+        } catch(Exception e) { e.printStackTrace(); }
     }
     private void wrongAnswerSound(){
-        final MediaPlayer wrongAnswer=MediaPlayer.create(this,R.raw.wrong_answer_sound);
-        if(isInForeGround) {
-            wrongAnswer.start();
+        wrongAnswer=MediaPlayer.create(this,R.raw.wrong_answer_sound);
+        try {
+            if (wrongAnswer.isPlaying()) {
+                wrongAnswer.stop();
+                wrongAnswer.release();
+                wrongAnswer = MediaPlayer.create(this, R.raw.wrong_answer_sound);
+            }
+            if(isInForeGround) {
+                wrongAnswer.start();
+            }
         }
+        catch(Exception e) { e.printStackTrace(); }
     }
     @Override
     protected void onResume() {
@@ -265,14 +292,17 @@ public class CapoFanActivity extends AppCompatActivity {
     private void ShowPercent (){
 
         int resultResId = (mTrueAnswer*100) / 9;
+        mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
             if (isInForeGround) {
 
                 Toast.makeText(this, Integer.toString(resultResId) + "% اجابات صح", Toast.LENGTH_LONG)
                         .show();
             }
+            Intent intent=new Intent(CapoFanActivity.this,ChooseLevelActivity.class);
+            startActivity(intent);
         }
-        if(resultResId==100){
+        if(mQuestionAsked.size() == mQuestionsBank.length){
             Intent intent=ChooseLevelActivity.thirdIntent(CapoFanActivity.this,resultResId);
             startActivity(intent);
             finish();

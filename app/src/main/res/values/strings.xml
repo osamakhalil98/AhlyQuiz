@@ -117,10 +117,13 @@
     <string name="question_29_choice_1"> عبد الله السعيد</string>
     <string name="question_29_choice_2">احمد فتحي</string>
     <string name="question_29_choice_3"> احمد الشيخ</string>
+    <string name="quiz_score_share">Your score is: %1$d% thanks for using AhlyQuiz!
+</string>
     <string name="prev_button">Prev!</string>
     <string name="correct_toast">Correct!</string>
     <string name="next_button">Next!</string>
     <string name="incorrect_toast">Wrong!</string>
+    <string name="send_score">Send Score via</string>
     <string name="welcome">Welcome To AhlyQuiz</string>
     <string name="warning_text">Are you sure you want to do this?</string>
     <string name="show_answer_button">Show Answer</string>

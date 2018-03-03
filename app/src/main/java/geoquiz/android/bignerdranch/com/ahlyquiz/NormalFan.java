@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class AhlyActivity extends AppCompatActivity {
+public class NormalFan extends AppCompatActivity {
     private TextView mQuestionTextView;
     private  TextView mFirstChoiceTextView;
     private  TextView mSecondChoiceTextView;
@@ -24,12 +24,16 @@ public class AhlyActivity extends AppCompatActivity {
     private Button mCheatButton;
     private ArrayList<Integer> mQuestionAsked = new ArrayList<Integer>(10);
     private ImageButton mNextButton;
+    private  int resultResId;
     private ImageButton mPrevButton;
     private int mTrueAnswer=0;
     private TextView mQuestionTimerTextView;
     private static final int REQUEST_CODE_CHEAT = 0;
     private  int timer = 15000;
     private int mResponse=0;
+    MediaPlayer correctAnswer;
+    MediaPlayer wrongAnswer;
+   private QuestionLab mScore=new QuestionLab();
     private Toast toast;
     private boolean isInForeGround;
     private int mIsCheater;
@@ -110,18 +114,18 @@ public class AhlyActivity extends AppCompatActivity {
               Next();
             }
         });
-
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int trueAnswer = mQuestionsBank[mCurrentIndex].getAnswerTrue();
-                Intent intent = CheatActivity.newIntent(AhlyActivity.this, trueAnswer);
+                Intent intent = CheatActivity.newIntent(NormalFan.this, trueAnswer);
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
-               if(mQuestionsBank[mCurrentIndex].getmAnswered()==0){
-                   cheatCounter++;
-               }
-               if(cheatCounter>=2){
-                   mCheatButton.setEnabled(false);
+                if(mCurrentIndex>=2){
+
+
+
+                       mCheatButton.setEnabled(false);
+                   
                }
             }
         });
@@ -183,9 +187,9 @@ public class AhlyActivity extends AppCompatActivity {
             correctAnswerSound();
             mResponse++;
             mTrueAnswer++;
-            toast = new Toast(AhlyActivity.this);
+            toast = new Toast(NormalFan.this);
             toast.setDuration(Toast.LENGTH_LONG);
-            LayoutInflater inflater = (LayoutInflater) AhlyActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) NormalFan.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.correct_toast, null);
             toast.setGravity(Gravity.BOTTOM, 0, 0);
             toast.setView(view);
@@ -197,9 +201,9 @@ public class AhlyActivity extends AppCompatActivity {
         else if(choice!=answerIsTrue){
             wrongAnswerSound();
             mResponse++;
-            toast = new Toast(AhlyActivity.this);
+            toast = new Toast(NormalFan.this);
             toast.setDuration(Toast.LENGTH_LONG);
-            LayoutInflater inflater = (LayoutInflater) AhlyActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) NormalFan.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.incorrect_toast, null);
             toast.setGravity(Gravity.BOTTOM, 0, 0);
             toast.setView(view);
@@ -214,15 +218,30 @@ else{
         setButtons();
     }
 private void correctAnswerSound(){
-    final MediaPlayer correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
-    correctAnswer.start();
+   correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
+    try {
+        if (correctAnswer.isPlaying()) {
+            correctAnswer.stop();
+            correctAnswer.release();
+            correctAnswer = MediaPlayer.create(this, R.raw.correct_answer_sound);
+        } correctAnswer.start();
+    } catch(Exception e) { e.printStackTrace(); }
 }
 private void wrongAnswerSound(){
-    final MediaPlayer wrongAnswer=MediaPlayer.create(this,R.raw.wrong_answer_sound);
-    if(isInForeGround) {
-        wrongAnswer.start();
+    wrongAnswer=MediaPlayer.create(this,R.raw.wrong_answer_sound);
+    try {
+        if (wrongAnswer.isPlaying()) {
+            wrongAnswer.stop();
+            wrongAnswer.release();
+            wrongAnswer = MediaPlayer.create(this, R.raw.wrong_answer_sound);
+        }
+        if(isInForeGround) {
+            wrongAnswer.start();
+        }
     }
+ catch(Exception e) { e.printStackTrace(); }
 }
+
     private  void  Prev (){
         if(mCurrentIndex==0){
             return;
@@ -270,24 +289,26 @@ private void wrongAnswerSound(){
         }
     }
     private void ShowPercent (){
-        int resultResId = (mTrueAnswer*100) / 10;
+        resultResId = (mTrueAnswer*100) / 10;
+        mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
             if (isInForeGround) {
 
                 Toast.makeText(this, Integer.toString(resultResId) + "% اجابات صح", Toast.LENGTH_LONG)
                         .show();
             }
-
+             Intent intent=new Intent(NormalFan.this,ChooseLevelActivity.class);
+            startActivity(intent);
+            finish();
         }
 
-        if(resultResId==100){
+        if(mQuestionAsked.size() == mQuestionsBank.length){
             Toast.makeText(this, "مستوي المشجع الحقيقي اتفتح!", Toast.LENGTH_SHORT).show();
-            Intent intent=ChooseLevelActivity.newIntent(AhlyActivity.this,resultResId);
+            Intent intent=ChooseLevelActivity.newIntent(NormalFan.this,resultResId);
             startActivity(intent);
             finish();
 
         }
-
     }
     @Override
     protected void onResume() {
@@ -320,9 +341,9 @@ private void wrongAnswerSound(){
                     if(mResponse<10){
                         mQuestionAsked.add(mCurrentIndex);
                         wrongAnswerSound();
-                        Toast toast = new Toast(AhlyActivity.this);
+                        Toast toast = new Toast(NormalFan.this);
                         toast.setDuration(Toast.LENGTH_LONG);
-                        LayoutInflater inflater = (LayoutInflater) AhlyActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        LayoutInflater inflater = (LayoutInflater) NormalFan.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View view = inflater.inflate(R.layout.incorrect_toast, null);
                         toast.setGravity(Gravity.BOTTOM, 0, 0);
                         toast.setView(view);

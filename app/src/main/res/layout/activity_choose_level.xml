@@ -38,7 +38,6 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="100%"
           android:layout_gravity="center"
           android:textColor="#000"
           android:id="@+id/first_percentage_text_view"
@@ -68,7 +67,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100%"
             android:id="@+id/second_percentage_text_view"
             android:layout_gravity="center"
             android:textColor="#000"
@@ -98,7 +96,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100%"
             android:layout_gravity="center"
             android:textColor="#000"
             android:id="@+id/third_percentage_text_view"
@@ -109,21 +106,8 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/medal2"
-        android:id="@+id/medal_image_view"
-        android:layout_gravity="center"
-
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="مبروك!"
-        android:textStyle="bold"
-        android:id="@+id/congrats_text_view"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:textSize="30sp"
-        android:textColor="#000"
+        android:src="@drawable/ic_share_score"
+        android:id="@+id/share_score_image"
         />
     </LinearLayout>
 

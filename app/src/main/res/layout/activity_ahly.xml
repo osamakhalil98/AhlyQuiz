@@ -21,7 +21,7 @@
         >
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/ahly_splash"
 
@@ -45,6 +45,8 @@
             android:id="@+id/first_choice_text_view"
            android:fontFamily="sans-serif"
             android:textStyle="bold"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="#EC2028"
             android:textSize="20sp"
             android:layout_margin="10dp"
@@ -56,12 +58,16 @@
             android:layout_margin="10dp"
             android:textStyle="bold"
             android:fontFamily="sans-serif"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="#EC2028"
             android:textSize="20sp"
             android:id="@+id/second_choice_text_view"/>
         <TextView
             android:layout_width="wrap_content"
             android:id="@+id/third_choice_text_view"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_margin="10dp"
@@ -105,8 +111,8 @@
     android:contentDescription="@string/next_button"
     android:src="@drawable/arrow_right"
         style="@style/ChooseButtonStyle"
-        android:layout_marginTop="10dp"
-    />
+        android:layout_marginTop="10dp"></ImageButton>
+
     </LinearLayout>
 
 

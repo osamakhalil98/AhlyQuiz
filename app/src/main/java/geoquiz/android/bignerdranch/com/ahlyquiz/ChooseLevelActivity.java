@@ -17,14 +17,13 @@ public class ChooseLevelActivity extends AppCompatActivity {
     private Button mNormalFanButton;
     private Button mTrueFanButton;
     private Button mCapoFanButton;
+    private ImageView mShareScoreImage;
     private int mResultByUser;
     private TextView mFirstPercentageTextView;
     private TextView mSecondPercentageTextView;
     private TextView mThirdPercentageTextView;
     private int mSecondResultByUser;
     private int mThirdResultByUser;
-    private ImageView mMedalImageView;
-    private TextView mCongratsTextView;
     public static Intent newIntent(Context packageContext, int resultByUser) {
         Intent intent = new Intent(packageContext, ChooseLevelActivity.class);
         intent.putExtra(UNLOCK_TRUE_LEVEL, resultByUser);
@@ -50,11 +49,10 @@ public class ChooseLevelActivity extends AppCompatActivity {
        mSecondResultByUser=getIntent().getIntExtra(UNLOCK_CAPO_LEVEL,0);
        mThirdResultByUser=getIntent().getIntExtra(FINISHED_CAPO_LEVEL,0);
        showPercentage();
-       showMedal();
         mNormalFanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(ChooseLevelActivity.this, AhlyActivity.class);
+                Intent intent=new Intent(ChooseLevelActivity.this, NormalFan.class);
                 startActivity(intent);
             }
         });
@@ -62,43 +60,61 @@ public class ChooseLevelActivity extends AppCompatActivity {
         mTrueFanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mResultByUser==100){
+                if(mResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, TrueFanActivity.class);
                     startActivity(intent);
                 }
-                else if(mSecondResultByUser==100){
+                else if(mSecondResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, TrueFanActivity.class);
                     startActivity(intent);
                 }
-                else if(mThirdResultByUser==100){
+                else if(mThirdResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, TrueFanActivity.class);
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(ChooseLevelActivity.this, "لازم تقفل مستوي المشجع العادي الاول!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChooseLevelActivity.this, "لازم تعدي مستوي المشجع العادي الاول!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         mCapoFanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mResultByUser==100){
-                    Toast.makeText(ChooseLevelActivity.this, "لازم تقفل مستوي المشجع الحقيقي الاول!", Toast.LENGTH_SHORT).show();
-
+                if(mResultByUser>=50){
+                    Toast.makeText(ChooseLevelActivity.this, "لازم تعدي مستوي المشجع الحقيقي الاول!", Toast.LENGTH_SHORT).show();
                 }
-               else if(mSecondResultByUser==100){
+               else if(mSecondResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, CapoFanActivity.class);
                     startActivity(intent);
                 }
-                else if(mThirdResultByUser==100){
+               else  if(mThirdResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, CapoFanActivity.class);
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(ChooseLevelActivity.this, "لازم تقفل مستوي المشجع العادي الاول!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChooseLevelActivity.this, "لازم تعدي مستوي المشجع العادي الاول!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        mShareScoreImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendReport=new Intent(Intent.ACTION_SEND);
+                sendReport.setType("text/plain");
+                sendReport.putExtra(Intent.EXTRA_TEXT, getQuizReport());
+                sendReport.putExtra(Intent.EXTRA_SUBJECT,
+                        getString(R.string.quiz_score_share));
+                sendReport = Intent.createChooser(sendReport, getString(R.string.send_score));
+                startActivity(sendReport);
+            }
+        });
+    }
+
+    private String getQuizReport() {
+        int score;
+        score=mResultByUser+mSecondResultByUser+mThirdResultByUser;
+        String quizScore=getString(R.string.quiz_score_share,score);
+        return  quizScore;
     }
 
 
@@ -109,34 +125,37 @@ public class ChooseLevelActivity extends AppCompatActivity {
         mFirstPercentageTextView=findViewById(R.id.first_percentage_text_view);
         mSecondPercentageTextView=findViewById(R.id.second_percentage_text_view);
         mThirdPercentageTextView=findViewById(R.id.third_percentage_text_view);
-        mCongratsTextView=findViewById(R.id.congrats_text_view);
-        mMedalImageView=findViewById(R.id.medal_image_view);
+        mShareScoreImage=findViewById(R.id.share_score_image);
     }
 
-private void showMedal(){
-        mCongratsTextView.setVisibility(View.INVISIBLE);
-        mMedalImageView.setVisibility(View.INVISIBLE);
-        if(mThirdResultByUser==100){
-            mCongratsTextView.setVisibility(View.VISIBLE);
-            mMedalImageView.setVisibility(View.VISIBLE);
-        }
-}
     private void showPercentage(){
-        mFirstPercentageTextView.setVisibility(View.INVISIBLE);
-        mSecondPercentageTextView.setVisibility(View.INVISIBLE);
-        mThirdPercentageTextView.setVisibility(View.INVISIBLE);
-        if(mResultByUser==100){
-            mFirstPercentageTextView.setVisibility(View.VISIBLE);
-        }
-        if(mSecondResultByUser==100){
-            mFirstPercentageTextView.setVisibility(View.VISIBLE);
-            mSecondPercentageTextView.setVisibility(View.VISIBLE);
-        }
-if(mThirdResultByUser==100){
-    mFirstPercentageTextView.setVisibility(View.VISIBLE);
-    mSecondPercentageTextView.setVisibility(View.VISIBLE);
-    mThirdPercentageTextView.setVisibility(View.VISIBLE);
-}
+        mFirstPercentageTextView.setText(mResultByUser+"%");
+       mSecondPercentageTextView.setText(mSecondResultByUser+"%");
+        mThirdPercentageTextView.setText(mThirdResultByUser+"%");
+//        mFirstPercentageTextView.setVisibility(View.INVISIBLE);
+//        mFirstPercentageTextView.setVisibility(View.INVISIBLE);
+//        mSecondPercentageTextView.setVisibility(View.INVISIBLE);
+//            if(mResultByUser>=50&&mSecondResultByUser>=50&&mThirdResultByUser>=50){
+//                mFirstPercentageTextView.setVisibility(View.VISIBLE);
+//                mSecondPercentageTextView.setVisibility(View.VISIBLE);
+//                mThirdPercentageTextView.setVisibility(View.VISIBLE);
+//            }
+//           else  if(mSecondResultByUser>=50){
+//                mFirstPercentageTextView.setVisibility(View.VISIBLE);
+//                mSecondPercentageTextView.setVisibility(View.VISIBLE);
+//                mFirstPercentageTextView.setText(mResultByUser+"%");
+//                mSecondPercentageTextView.setText(mSecondResultByUser+"%");
+//            }
+//            else  if(mThirdResultByUser>=50){
+//                mFirstPercentageTextView.setVisibility(View.VISIBLE);
+//                mSecondPercentageTextView.setVisibility(View.VISIBLE);
+//                mThirdPercentageTextView.setVisibility(View.VISIBLE);
+//                mThirdPercentageTextView.setText(mThirdResultByUser+"%");
+//                mFirstPercentageTextView.setText(mResultByUser+"%");
+//                mSecondPercentageTextView.setText(mSecondResultByUser+"%");
+//            }
+
+
 
     }
 }
