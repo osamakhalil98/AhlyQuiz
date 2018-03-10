@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,9 @@ public class TrueFanActivity extends AppCompatActivity {
     private int mResponse=0;
     MediaPlayer correctAnswer;
     MediaPlayer wrongAnswer;
+    private boolean musicOnOrOff=true;
+    private ImageView mMusicOn;
+    private ImageView mMusicOff;
     private QuestionLab mScore=new QuestionLab();
     private Toast toast;
     private boolean isInForeGround;
@@ -116,6 +120,22 @@ public class TrueFanActivity extends AppCompatActivity {
                 Next();
             }
         });
+        mMusicOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicOnOrOff=false;
+                mMusicOn.setVisibility(View.INVISIBLE);
+                mMusicOff.setVisibility(View.VISIBLE);
+            }
+        });
+        mMusicOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicOnOrOff=true;
+                mMusicOff.setVisibility(View.INVISIBLE);
+                mMusicOn.setVisibility(View.VISIBLE);
+            }
+        });
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,6 +185,8 @@ public class TrueFanActivity extends AppCompatActivity {
         mPrevButton=findViewById(R.id.prev_button);
         mCheatButton=findViewById(R.id.cheat_button);
         mQuestionTimerTextView=findViewById(R.id.question_timer_text_view);
+        mMusicOff=findViewById(R.id.music_off);
+        mMusicOn=findViewById(R.id.music_on);
     }
 
     private void updateMethod() {
@@ -186,7 +208,9 @@ public class TrueFanActivity extends AppCompatActivity {
     {
         int answerIsTrue = mQuestionsBank[mCurrentIndex].getAnswerTrue();
         if(choice == answerIsTrue) {
-            correctAnswerSound();
+            if(musicOnOrOff) {
+                correctAnswerSound();
+            }
             mResponse++;
             mTrueAnswer++;
             toast = new Toast(TrueFanActivity.this);
@@ -201,7 +225,9 @@ public class TrueFanActivity extends AppCompatActivity {
         }
 
         else if(choice!=answerIsTrue){
-            wrongAnswerSound();
+            if(musicOnOrOff) {
+                wrongAnswerSound();
+            }
             mResponse++;
             toast = new Toast(TrueFanActivity.this);
             toast.setDuration(Toast.LENGTH_LONG);
@@ -294,18 +320,15 @@ public class TrueFanActivity extends AppCompatActivity {
         resultResId = (mTrueAnswer*100) / 10;
         mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
-            if (isInForeGround) {
-
-                Toast.makeText(this, Integer.toString(resultResId) + "% اجابات صح", Toast.LENGTH_LONG)
-                        .show();
-            }
             Intent intent=new Intent(TrueFanActivity.this,ChooseLevelActivity.class);
             startActivity(intent);
             finish();
         }
 
         if(mQuestionAsked.size() == mQuestionsBank.length){
-            Toast.makeText(this, "مستوي المشجع الحقيقي اتفتح!", Toast.LENGTH_SHORT).show();
+            if(resultResId>50){
+                Toast.makeText(this, "مستوي الكابو اتفتح!", Toast.LENGTH_SHORT).show();
+            }
             Intent intent=ChooseLevelActivity.secondIntent(TrueFanActivity.this,resultResId);
             startActivity(intent);
             finish();
@@ -342,7 +365,9 @@ public class TrueFanActivity extends AppCompatActivity {
                     setButtons();
                     if(mResponse<10){
                         mQuestionAsked.add(mCurrentIndex);
-                        wrongAnswerSound();
+                        if(musicOnOrOff) {
+                            wrongAnswerSound();
+                        }
                         Toast toast = new Toast(TrueFanActivity.this);
                         toast.setDuration(Toast.LENGTH_LONG);
                         LayoutInflater inflater = (LayoutInflater) TrueFanActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,9 @@ public class NormalFan extends AppCompatActivity {
     private boolean isInForeGround;
     private int mIsCheater;
     private int cheatCounter=0;
+    private ImageView mMusicOn;
+    private ImageView mMusicOff;
+    private boolean musicOnOrOff=true;
     private CountDownTimer mCountDownTimer;
     private Question[] mQuestionsBank= new Question[]{
             new Question(R.string.question_1, R.string.question_1_choice_1, R.string.question_1_choice_2, R.string.question_1_choice_3, R.string.question_1_choice_2),
@@ -114,6 +118,22 @@ public class NormalFan extends AppCompatActivity {
               Next();
             }
         });
+        mMusicOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               musicOnOrOff=false;
+                mMusicOn.setVisibility(View.INVISIBLE);
+                mMusicOff.setVisibility(View.VISIBLE);
+            }
+        });
+        mMusicOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicOnOrOff=true;
+                mMusicOff.setVisibility(View.INVISIBLE);
+                mMusicOn.setVisibility(View.VISIBLE);
+            }
+        });
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,6 +183,8 @@ public class NormalFan extends AppCompatActivity {
         mPrevButton=findViewById(R.id.prev_button);
         mCheatButton=findViewById(R.id.cheat_button);
         mQuestionTimerTextView=findViewById(R.id.question_timer_text_view);
+        mMusicOn=findViewById(R.id.music_on);
+        mMusicOff=findViewById(R.id.music_off);
     }
 
     private void updateMethod() {
@@ -184,7 +206,9 @@ public class NormalFan extends AppCompatActivity {
     {
         int answerIsTrue = mQuestionsBank[mCurrentIndex].getAnswerTrue();
         if(choice == answerIsTrue) {
-            correctAnswerSound();
+            if(musicOnOrOff) {
+                correctAnswerSound();
+            }
             mResponse++;
             mTrueAnswer++;
             toast = new Toast(NormalFan.this);
@@ -199,7 +223,9 @@ public class NormalFan extends AppCompatActivity {
         }
 
         else if(choice!=answerIsTrue){
-            wrongAnswerSound();
+            if(musicOnOrOff) {
+                wrongAnswerSound();
+            }
             mResponse++;
             toast = new Toast(NormalFan.this);
             toast.setDuration(Toast.LENGTH_LONG);
@@ -226,22 +252,25 @@ private void correctAnswerSound(){
             correctAnswer = MediaPlayer.create(this, R.raw.correct_answer_sound);
         } correctAnswer.start();
     } catch(Exception e) { e.printStackTrace(); }
-}
-private void wrongAnswerSound(){
-    wrongAnswer=MediaPlayer.create(this,R.raw.wrong_answer_sound);
-    try {
-        if (wrongAnswer.isPlaying()) {
-            wrongAnswer.stop();
-            wrongAnswer.release();
-            wrongAnswer = MediaPlayer.create(this, R.raw.wrong_answer_sound);
-        }
-        if(isInForeGround) {
-            wrongAnswer.start();
-        }
-    }
- catch(Exception e) { e.printStackTrace(); }
-}
 
+    }
+private void wrongAnswerSound() {
+    wrongAnswer = MediaPlayer.create(this, R.raw.wrong_answer_sound);
+        try {
+
+            if (wrongAnswer.isPlaying()) {
+                wrongAnswer.stop();
+                wrongAnswer.release();
+                wrongAnswer = MediaPlayer.create(this, R.raw.wrong_answer_sound);
+            }
+            if (isInForeGround) {
+                wrongAnswer.start();
+            }
+         }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+}
     private  void  Prev (){
         if(mCurrentIndex==0){
             return;
@@ -262,6 +291,7 @@ private void wrongAnswerSound(){
         mCurrentIndex = (mCurrentIndex - 1) % mQuestionsBank.length;
        updateMethod();
     }
+
     private void Next (){
         mCountDownTimer.cancel();
         if (mQuestionAsked.size() == mQuestionsBank.length  ){
@@ -292,18 +322,15 @@ private void wrongAnswerSound(){
         resultResId = (mTrueAnswer*100) / 10;
         mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
-            if (isInForeGround) {
-
-                Toast.makeText(this, Integer.toString(resultResId) + "% اجابات صح", Toast.LENGTH_LONG)
-                        .show();
-            }
              Intent intent=new Intent(NormalFan.this,ChooseLevelActivity.class);
             startActivity(intent);
             finish();
         }
 
         if(mQuestionAsked.size() == mQuestionsBank.length){
-            Toast.makeText(this, "مستوي المشجع الحقيقي اتفتح!", Toast.LENGTH_SHORT).show();
+            if(resultResId>50) {
+                Toast.makeText(this, "مستوي المشجع الحقيقي اتفتح!", Toast.LENGTH_SHORT).show();
+            }
             Intent intent=ChooseLevelActivity.newIntent(NormalFan.this,resultResId);
             startActivity(intent);
             finish();
@@ -340,7 +367,9 @@ private void wrongAnswerSound(){
                     setButtons();
                     if(mResponse<10){
                         mQuestionAsked.add(mCurrentIndex);
-                        wrongAnswerSound();
+                        if(musicOnOrOff) {
+                            wrongAnswerSound();
+                        }
                         Toast toast = new Toast(NormalFan.this);
                         toast.setDuration(Toast.LENGTH_LONG);
                         LayoutInflater inflater = (LayoutInflater) NormalFan.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -117,7 +117,7 @@
     <string name="question_29_choice_1"> عبد الله السعيد</string>
     <string name="question_29_choice_2">احمد فتحي</string>
     <string name="question_29_choice_3"> احمد الشيخ</string>
-    <string name="quiz_score_share">Your score is: %1$d% thanks for using AhlyQuiz!
+    <string name="quiz_score_share">Your score is: %1$d thanks for using AhlyQuiz!, you can download the app from this link:
 </string>
     <string name="prev_button">Prev!</string>
     <string name="correct_toast">Correct!</string>
@@ -131,4 +131,5 @@
     <string name="two_cheats_toast">You have 2 Cheats Now!</string>
     <string name="one_cheat_toast">You have one 1 Cheat Now!</string>
     <string name="no_cheat_toast"> You Cannot Cheat Now!</string>
+    <string name="close_app">عايز تقفل الابليكشن؟</string>
 </resources>

@@ -1,8 +1,10 @@
 package geoquiz.android.bignerdranch.com.ahlyquiz;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -117,6 +119,26 @@ public class ChooseLevelActivity extends AppCompatActivity {
         return  quizScore;
     }
 
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder= new AlertDialog.Builder(ChooseLevelActivity.this);
+        builder.setMessage(R.string.close_app);
+        builder.setCancelable(false);
+        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+    }
 
     private void castUtils(){
         mNormalFanButton=findViewById(R.id.normal_fan_button);
@@ -132,30 +154,5 @@ public class ChooseLevelActivity extends AppCompatActivity {
         mFirstPercentageTextView.setText(mResultByUser+"%");
        mSecondPercentageTextView.setText(mSecondResultByUser+"%");
         mThirdPercentageTextView.setText(mThirdResultByUser+"%");
-//        mFirstPercentageTextView.setVisibility(View.INVISIBLE);
-//        mFirstPercentageTextView.setVisibility(View.INVISIBLE);
-//        mSecondPercentageTextView.setVisibility(View.INVISIBLE);
-//            if(mResultByUser>=50&&mSecondResultByUser>=50&&mThirdResultByUser>=50){
-//                mFirstPercentageTextView.setVisibility(View.VISIBLE);
-//                mSecondPercentageTextView.setVisibility(View.VISIBLE);
-//                mThirdPercentageTextView.setVisibility(View.VISIBLE);
-//            }
-//           else  if(mSecondResultByUser>=50){
-//                mFirstPercentageTextView.setVisibility(View.VISIBLE);
-//                mSecondPercentageTextView.setVisibility(View.VISIBLE);
-//                mFirstPercentageTextView.setText(mResultByUser+"%");
-//                mSecondPercentageTextView.setText(mSecondResultByUser+"%");
-//            }
-//            else  if(mThirdResultByUser>=50){
-//                mFirstPercentageTextView.setVisibility(View.VISIBLE);
-//                mSecondPercentageTextView.setVisibility(View.VISIBLE);
-//                mThirdPercentageTextView.setVisibility(View.VISIBLE);
-//                mThirdPercentageTextView.setText(mThirdResultByUser+"%");
-//                mFirstPercentageTextView.setText(mResultByUser+"%");
-//                mSecondPercentageTextView.setText(mSecondResultByUser+"%");
-//            }
-
-
-
     }
 }

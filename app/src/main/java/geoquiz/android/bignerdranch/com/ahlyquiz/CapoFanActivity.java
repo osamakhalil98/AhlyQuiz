@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,9 @@ public class CapoFanActivity extends AppCompatActivity {
     private TextView mQuestionTimerTextView;
     MediaPlayer correctAnswer;
     MediaPlayer wrongAnswer;
+    private boolean musicOnOrOff=true;
+    private ImageView mMusicOn;
+    private ImageView mMusicOff;
     private boolean isInForeGround;
     private  int timer = 10000;
     private int mResponse=0;
@@ -101,6 +105,22 @@ public class CapoFanActivity extends AppCompatActivity {
                 Next();
             }
         });
+        mMusicOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicOnOrOff=false;
+                mMusicOn.setVisibility(View.INVISIBLE);
+                mMusicOff.setVisibility(View.VISIBLE);
+            }
+        });
+        mMusicOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicOnOrOff=true;
+                mMusicOff.setVisibility(View.INVISIBLE);
+                mMusicOn.setVisibility(View.VISIBLE);
+            }
+        });
         mThirdChoiceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +166,8 @@ public class CapoFanActivity extends AppCompatActivity {
         mPrevButton=  findViewById(R.id.prev_button);
         mCheatButton=findViewById(R.id.cheat_button);
         mQuestionTimerTextView=findViewById(R.id.question_timer_text_view);
+        mMusicOn=findViewById(R.id.music_on);
+        mMusicOff=findViewById(R.id.music_off);
     }
 
     private void updateMethod() {
@@ -169,7 +191,9 @@ public class CapoFanActivity extends AppCompatActivity {
         int answerIsTrue = mQuestionsBank[mCurrentIndex].getAnswerTrue();
 
         if(choice == answerIsTrue){
-            correctAnswerSound();
+            if(musicOnOrOff) {
+                correctAnswerSound();
+            }
             mResponse++;
             mTrueAnswer++;
             Toast toast = new Toast(CapoFanActivity.this);
@@ -184,7 +208,9 @@ public class CapoFanActivity extends AppCompatActivity {
         }
 
         else if(choice!=answerIsTrue){
-            wrongAnswerSound();
+            if(musicOnOrOff) {
+                wrongAnswerSound();
+            }
             mResponse++;
             Toast toast = new Toast(CapoFanActivity.this);
             toast.setDuration(Toast.LENGTH_LONG);
@@ -294,11 +320,6 @@ public class CapoFanActivity extends AppCompatActivity {
         int resultResId = (mTrueAnswer*100) / 9;
         mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
-            if (isInForeGround) {
-
-                Toast.makeText(this, Integer.toString(resultResId) + "% اجابات صح", Toast.LENGTH_LONG)
-                        .show();
-            }
             Intent intent=new Intent(CapoFanActivity.this,ChooseLevelActivity.class);
             startActivity(intent);
         }
@@ -325,7 +346,9 @@ public class CapoFanActivity extends AppCompatActivity {
                     setButtons();
                     if(mResponse<9){
                         mQuestionAsked.add(mCurrentIndex);
-                        wrongAnswerSound();
+                        if(musicOnOrOff) {
+                            wrongAnswerSound();
+                        }
                         Toast toast = new Toast(CapoFanActivity.this);
                         toast.setDuration(Toast.LENGTH_LONG);
                         LayoutInflater inflater = (LayoutInflater)CapoFanActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
