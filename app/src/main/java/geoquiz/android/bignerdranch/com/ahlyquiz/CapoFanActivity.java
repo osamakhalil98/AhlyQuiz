@@ -1,10 +1,12 @@
 package geoquiz.android.bignerdranch.com.ahlyquiz;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -268,6 +270,28 @@ public class CapoFanActivity extends AppCompatActivity {
         isInForeGround=false;
         super.onDestroy();
     }
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder= new AlertDialog.Builder(CapoFanActivity.this);
+        builder.setMessage(R.string.levels_activity);
+        builder.setCancelable(true);
+        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent=new Intent(CapoFanActivity.this, ChooseLevelActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+    }
     private  void  Prev (){
         if(mCurrentIndex==0){
             return;
@@ -320,13 +344,11 @@ public class CapoFanActivity extends AppCompatActivity {
         int resultResId = (mTrueAnswer*100) / 9;
         mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
-            Intent intent=new Intent(CapoFanActivity.this,ChooseLevelActivity.class);
-            startActivity(intent);
-        }
-        if(mQuestionAsked.size() == mQuestionsBank.length){
-            Intent intent=ChooseLevelActivity.thirdIntent(CapoFanActivity.this,resultResId);
-            startActivity(intent);
-            finish();
+            if (isInForeGround) {
+                Intent intent = ChooseLevelActivity.thirdIntent(CapoFanActivity.this, resultResId);
+                startActivity(intent);
+                finish();
+            }
         }
 
     }

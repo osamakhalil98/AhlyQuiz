@@ -1,10 +1,12 @@
 package geoquiz.android.bignerdranch.com.ahlyquiz;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -320,20 +322,18 @@ public class TrueFanActivity extends AppCompatActivity {
         resultResId = (mTrueAnswer*100) / 10;
         mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
-            Intent intent=new Intent(TrueFanActivity.this,ChooseLevelActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        if(mQuestionAsked.size() == mQuestionsBank.length){
-            if(resultResId>50){
-                Toast.makeText(this, "مستوي الكابو اتفتح!", Toast.LENGTH_SHORT).show();
+            if(resultResId>50) {
+                if(isInForeGround) {
+                    Toast.makeText(this, "مستوي الكابو اتفتح!", Toast.LENGTH_SHORT).show();
+                }
             }
-            Intent intent=ChooseLevelActivity.secondIntent(TrueFanActivity.this,resultResId);
-            startActivity(intent);
-            finish();
-
+           if (isInForeGround) {
+                Intent intent = ChooseLevelActivity.secondIntent(TrueFanActivity.this, resultResId);
+                startActivity(intent);
+                finish();
+            }
         }
+
     }
     @Override
     protected void onResume() {
@@ -350,7 +350,28 @@ public class TrueFanActivity extends AppCompatActivity {
     protected void onDestroy() {isInForeGround=false;
         super.onDestroy();
     }
-
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder= new AlertDialog.Builder(TrueFanActivity.this);
+        builder.setMessage(R.string.levels_activity);
+        builder.setCancelable(true);
+        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent=new Intent(TrueFanActivity.this, ChooseLevelActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+    }
     private void questionTimer () {
         if (mQuestionsBank[mCurrentIndex].getmAnswered() == 0) {
             mCountDownTimer = new CountDownTimer(timer, 1000) {

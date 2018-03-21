@@ -1,10 +1,12 @@
 package geoquiz.android.bignerdranch.com.ahlyquiz;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,7 +48,7 @@ public class NormalFan extends AppCompatActivity {
     private Question[] mQuestionsBank= new Question[]{
             new Question(R.string.question_1, R.string.question_1_choice_1, R.string.question_1_choice_2, R.string.question_1_choice_3, R.string.question_1_choice_2),
             new Question(R.string.question_7, R.string.question_7_choice_1, R.string.question_7_choice_2, R.string.question_7_choice_3, R.string.question_7_choice_3),
-            new Question(R.string.question_9, R.string.question_9_choice_1, R.string.question_9_choice_2, R.string.question_9_choice_3, R.string.question_9_choice_2),
+            new Question(R.string.question_9, R.string.question_9_choice_1, R.string.question_9_choice_2, R.string.question_9_choice_3, R.string.question_9_choice_3),
             new Question(R.string.question_10, R.string.question_10_choice_1, R.string.question_10_choice_2, R.string.question_10_choice_3, R.string.question_10_choice_1),
             new Question(R.string.question_15, R.string.question_15_choice_1, R.string.question_15_choice_2, R.string.question_15_choice_3, R.string.question_15_choice_1),
             new Question(R.string.question_19, R.string.question_19_choice_1, R.string.question_19_choice_2, R.string.question_19_choice_3, R.string.question_19_choice_1),
@@ -141,11 +143,7 @@ public class NormalFan extends AppCompatActivity {
                 Intent intent = CheatActivity.newIntent(NormalFan.this, trueAnswer);
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
                 if(mCurrentIndex>=2){
-
-
-
                        mCheatButton.setEnabled(false);
-                   
                }
             }
         });
@@ -243,6 +241,28 @@ else{
         mQuestionsBank[mCurrentIndex].setmAnswered(1);
         setButtons();
     }
+
+//    public void onBackPressed() {
+//        final AlertDialog.Builder builder= new AlertDialog.Builder(NormalFan.this);
+//        builder.setMessage(R.string.levels_activity);
+//        builder.setCancelable(false);
+//        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                Intent intent=new Intent(NormalFan.this, ChooseLevelActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+//        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                dialogInterface.cancel();
+//            }
+//        });
+//        AlertDialog alertDialog=builder.create();
+//        alertDialog.show();
+//    }
 private void correctAnswerSound(){
    correctAnswer=MediaPlayer.create(this,R.raw.correct_answer_sound);
     try {
@@ -322,20 +342,18 @@ private void wrongAnswerSound() {
         resultResId = (mTrueAnswer*100) / 10;
         mScore.setScore(resultResId);
         if (mQuestionAsked.size() == mQuestionsBank.length ) {
-             Intent intent=new Intent(NormalFan.this,ChooseLevelActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        if(mQuestionAsked.size() == mQuestionsBank.length){
             if(resultResId>50) {
-                Toast.makeText(this, "مستوي المشجع الحقيقي اتفتح!", Toast.LENGTH_SHORT).show();
+                if(isInForeGround) {
+                    Toast.makeText(this, "مستوي المشجع الحقيقي اتفتح!", Toast.LENGTH_SHORT).show();
+                }
             }
-            Intent intent=ChooseLevelActivity.newIntent(NormalFan.this,resultResId);
-            startActivity(intent);
-            finish();
-
+           if (isInForeGround) {
+                Intent intent = ChooseLevelActivity.newIntent(NormalFan.this, resultResId);
+                startActivity(intent);
+                finish();
+            }
         }
+
     }
     @Override
     protected void onResume() {
@@ -352,7 +370,28 @@ private void wrongAnswerSound() {
     protected void onDestroy() {isInForeGround=false;
         super.onDestroy();
     }
-
+        @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder= new AlertDialog.Builder(NormalFan.this);
+        builder.setMessage(R.string.levels_activity);
+        builder.setCancelable(true);
+        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent=new Intent(NormalFan.this, ChooseLevelActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+    }
     private void questionTimer () {
         if (mQuestionsBank[mCurrentIndex].getmAnswered() == 0) {
             mCountDownTimer = new CountDownTimer(timer, 1000) {

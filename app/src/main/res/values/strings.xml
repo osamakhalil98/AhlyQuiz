@@ -132,4 +132,5 @@
     <string name="one_cheat_toast">You have one 1 Cheat Now!</string>
     <string name="no_cheat_toast"> You Cannot Cheat Now!</string>
     <string name="close_app">عايز تقفل الابليكشن؟</string>
+    <string name="levels_activity">عايز ترجع للمستويات؟</string>
 </resources>

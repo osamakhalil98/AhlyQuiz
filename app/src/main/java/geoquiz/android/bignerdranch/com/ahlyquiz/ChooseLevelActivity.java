@@ -1,10 +1,8 @@
 package geoquiz.android.bignerdranch.com.ahlyquiz;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +54,7 @@ public class ChooseLevelActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(ChooseLevelActivity.this, NormalFan.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -65,14 +64,17 @@ public class ChooseLevelActivity extends AppCompatActivity {
                 if(mResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, TrueFanActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else if(mSecondResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, TrueFanActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else if(mThirdResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, TrueFanActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     Toast.makeText(ChooseLevelActivity.this, "لازم تعدي مستوي المشجع العادي الاول!", Toast.LENGTH_SHORT).show();
@@ -85,13 +87,15 @@ public class ChooseLevelActivity extends AppCompatActivity {
                 if(mResultByUser>=50){
                     Toast.makeText(ChooseLevelActivity.this, "لازم تعدي مستوي المشجع الحقيقي الاول!", Toast.LENGTH_SHORT).show();
                 }
-               else if(mSecondResultByUser>=50){
+                else if(mSecondResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, CapoFanActivity.class);
                     startActivity(intent);
+                    finish();
                 }
-               else  if(mThirdResultByUser>=50){
+                else  if(mThirdResultByUser>=50){
                     Intent intent=new Intent(ChooseLevelActivity.this, CapoFanActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     Toast.makeText(ChooseLevelActivity.this, "لازم تعدي مستوي المشجع العادي الاول!", Toast.LENGTH_SHORT).show();
@@ -119,26 +123,26 @@ public class ChooseLevelActivity extends AppCompatActivity {
         return  quizScore;
     }
 
-    @Override
-    public void onBackPressed() {
-        final AlertDialog.Builder builder= new AlertDialog.Builder(ChooseLevelActivity.this);
-        builder.setMessage(R.string.close_app);
-        builder.setCancelable(false);
-        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog alertDialog=builder.create();
-        alertDialog.show();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        final AlertDialog.Builder builder= new AlertDialog.Builder(ChooseLevelActivity.this);
+//        builder.setMessage(R.string.close_app);
+//        builder.setCancelable(false);
+//        builder.setNegativeButton("ايوه", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                finish();
+//            }
+//        });
+//        builder.setPositiveButton("لا", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                dialogInterface.cancel();
+//            }
+//        });
+//        AlertDialog alertDialog=builder.create();
+//        alertDialog.show();
+//    }
 
     private void castUtils(){
         mNormalFanButton=findViewById(R.id.normal_fan_button);
